@@ -1,5 +1,7 @@
 import { movePiece } from './piece.js';
 
+// test
+
 movePiece('pawn', [8, 0], [5, 5]);
 movePiece('pawn', [1, 0], [5, -1]);
 movePiece('pawn', [3, 3], [4, 3]);

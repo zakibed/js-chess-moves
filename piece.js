@@ -1,10 +1,12 @@
 import { isValidPos, printBoard } from './board.js';
 import { PAWN_MOVES, KNIGHT_MOVES, BISHOP_MOVES, ROOK_MOVES, KING_MOVES, QUEEN_MOVES } from './constants.js';
 
+const Node = (pos, path = [pos]) => ({ pos, path });
+
 export function movePiece(piece, startPos, endPos) {
     piece = piece.toLowerCase();
 
-    // get piece move list and symbol
+    // get move offsets and symbol for piece
     let moves;
     let symbol;
 
@@ -53,11 +55,11 @@ export function movePiece(piece, startPos, endPos) {
         }
     } catch (err) {
         console.error(err);
-        return;
+        return null;
     }
 
-    // initialise queue for BFS with starting position and current path
-    const queue = [{ pos: startPos, path: [startPos] }];
+    // initialise queue for BFS with starting position and empty path
+    const queue = [Node(startPos)];
     // track visited positions to prevent cycles
     const visited = new Set();
     visited.add(startPos.toString());
@@ -77,7 +79,7 @@ export function movePiece(piece, startPos, endPos) {
             console.log(
                 `=> You made it in ${pathLength} move${
                     pathLength !== 1 ? 's' : ''
-                } with a ${piece}! Here's your shortest path:`
+                } with a ${piece} ${symbol} ! Here's your shortest path:`
             );
             printBoard(curPath, symbol);
 
@@ -90,7 +92,7 @@ export function movePiece(piece, startPos, endPos) {
             const newPosStr = newPos.toString();
 
             if (isValidPos(newPos) && !visited.has(newPosStr)) {
-                queue.push({ pos: newPos, path: [...curPath, newPos] });
+                queue.push(Node(newPos, [...curPath, newPos]));
                 visited.add(newPosStr);
             }
         }
